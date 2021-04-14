@@ -1,0 +1,32 @@
+# .github/workflows/sync.yml
+name: Sync Fork
+
+on:
+  schedule:
+    - cron:  '0 5 * * *'
+    # scheduled at 07:00 every Monday and Thursday
+  workflow_dispatch:
+
+jobs:
+  sync_with_upstream:
+    runs-on: ubuntu-latest
+    name: Sync master with upstream latest
+
+    steps:
+    - name: Checkout master
+      uses: actions/checkout@v2
+      with:
+        ref: master
+        
+    - name: Pull upstream changes
+      id: sync
+      uses: aormsby/Fork-Sync-With-Upstream-action@v2.3
+      with:
+        upstream_repository: sl1673495/vue-netease-music
+        upstream_branch: master
+        target_branch: master
+        git_pull_args: --unshallow
+        
+
+    - name: Timestamp
+      run: date
